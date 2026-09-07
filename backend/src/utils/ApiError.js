@@ -1,4 +1,4 @@
-class ApiErrors extends Error{
+class ApiError extends Error{
     constructor(statuscode, message = "Something wrong", errors=[], stack = "" ){
         super(message); // Not super(this.message) because "this" isn't initialized until after the parent constructor has been called.
 
@@ -15,4 +15,4 @@ class ApiErrors extends Error{
     }
 }
 
-module.exports.ApiErrors = ApiErrors;
+module.exports.ApiError = ApiError;
