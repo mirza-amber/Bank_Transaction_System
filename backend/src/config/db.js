@@ -4,7 +4,18 @@ const mongoose = require("mongoose")
 const connectDb = async ()=>{
     try{
         const connectioninstance = await mongoose.connect(`${process.env.MONGODB_URI}`);
-        console.log(`Connection established: ${connectioninstance.connection.host}`)
+        
+        const connection = mongoose.connection // gives you access to the connection object
+        
+        connection.on("connected", ()=>{
+            console.log(`Connection established: ${connectioninstance.connection.host}`);
+        })
+        connection.on("error", ()=>{
+            console.log(`Error connecting to database`);
+        })
+        connection.on("disconnected", ()=>{
+            console.log(`Database Disconnected`);
+        })
     }catch(error){
         console.log("Error: ", error);
         process.exit(1)

@@ -25,7 +25,21 @@ const userSchema = mongoose.Schema({
         type:String,
         default:null,
         select:false
-    }
+    },
+
+    // https://www.youtube.com/watch?v=MeGbbXGc4ts&list=WL&index=2&t=2558s Learn about below for send mail
+    isVerified:{
+        type: Boolean,
+        default: false
+    },
+    isAdmin:{
+        type: Boolean,
+        default: false
+    },
+    forgotPasswordToken: String,
+    forgotPasswordTokenExpiry: Date,
+    verifyToken: String,
+    verifyTokenExpiry: Date
 }, {timestamps: true})
 
 userSchema.pre("save", async function (req, res, next){
