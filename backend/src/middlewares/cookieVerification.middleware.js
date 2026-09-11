@@ -1,9 +1,12 @@
 const { ApiError } = require("../utils/ApiError.js");
 const { asyncHandler } = require("../utils/asyncHandler.js")
-const {jwt} = require("jsonwebtoken") 
+const jwt = require("jsonwebtoken") 
 const User = require("../models/user.model.js")
 
-const cookieverification = asyncHandler(async (req, res, next)=>{
+const cookieVerification = asyncHandler(async (req, res, next)=>{
+    // console.log(
+    //     req.cookies
+    // )
     const accessToken = await req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "");
 
     if(!accessToken) throw new ApiError(401, "Unauthorized Access!")
@@ -21,5 +24,5 @@ const cookieverification = asyncHandler(async (req, res, next)=>{
 })
 
 module.exports = {
-    cookieverification
+    cookieVerification
 }

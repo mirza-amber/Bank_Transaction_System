@@ -13,7 +13,5 @@ connectDb().then(()=>{
         console.log(`Server is active on Port: ${process.env.PORT || 5000}`)  
     })
 }).catch((error)=>{
-    (err)=>{
         console.log("Error @ db connect : ", err);
-    }
 })
