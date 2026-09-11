@@ -264,7 +264,7 @@ const generateHtmlTemplate =(verificationUrl, emailType)=>{ return `
 };
 
 
-const sendMailer = async ({email, emailType, userId})=>{
+const sendUserVerificationMail = async ({email, emailType, userId})=>{
     const token = crypto.randomUUID().toString();
     const verificationUrl = `http://localhost:8000/api/auth/verify/${token}`
     if(emailType === "VERIFY"){
@@ -315,5 +315,5 @@ const sendMailer = async ({email, emailType, userId})=>{
 }
 
 module.exports = {
-    sendMailer
+    sendUserVerificationMail
 }

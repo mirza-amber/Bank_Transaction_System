@@ -2,7 +2,7 @@ const User = require("../models/user.model.js")
 const {ApiError} = require("../utils/ApiError.js")
 const {ApiResponse} = require("../utils/ApiResponse.js")
 const {asyncHandler} = require("../utils/asyncHandler.js")
-const { sendMailer } = require("../services/email.service.js")
+const { sendUserVerificationMail } = require("../services/email.service.js")
 
 /**
  * - User Registration Controller
@@ -31,8 +31,11 @@ const userRegistrationController = asyncHandler(async (req, res)=>{
     const createdUser = await User.findById(user._id).select("")
 
     if (!createdUser) throw new ApiError(400, "Unable to register user!");
+    
+    res.status(200).json(new ApiResponse(200, createdUser, "User Registration Successful"))
 
-    const mailreturn = await sendMailer({
+    // If the mail is not sent due to some issue, the user will still be created, so we need to add another option in verify to resend email.
+    const mailreturn = await sendUserVerificationMail({
         email, 
         emailType:"VERIFY",
         userId:user._id
@@ -40,7 +43,7 @@ const userRegistrationController = asyncHandler(async (req, res)=>{
 
     // console.log(mailreturn)
 
-    return res.status(200).json(new ApiResponse(200, createdUser, "User Registration Successful"))
+    return ;
 })
 
 const generateUserAccessandRefreshToken = async (user)=>{
