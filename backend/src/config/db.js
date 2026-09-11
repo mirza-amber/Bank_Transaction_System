@@ -3,13 +3,13 @@ const mongoose = require("mongoose")
 
 const connectDb = async ()=>{
     try{
-        const connectioninstance = await mongoose.connect(`${process.env.MONGODB_URI}`);
-        
         const connection = mongoose.connection // gives you access to the connection object
         
         connection.on("connected", ()=>{
-            console.log(`Connection established: ${connectioninstance.connection.host}`);
+            console.log(`Connection established: ${connection.host}`);
         })
+        const connectioninstance = await mongoose.connect(`${process.env.MONGODB_URI}`);
+        
         connection.on("error", ()=>{
             console.log(`Error connecting to database`);
         })

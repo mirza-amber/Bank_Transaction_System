@@ -2,11 +2,14 @@ const User = require("../models/user.model.js")
 const {ApiError} = require("../utils/ApiError.js")
 const {ApiResponse} = require("../utils/ApiResponse.js")
 const {asyncHandler} = require("../utils/asyncHandler.js")
+const { sendMailer } = require("../services/email.service.js")
 
 /**
  * - User Registration Controller
  * - POST @ /api/auth/register
  */
+
+
 
 const userRegistrationController = asyncHandler(async (req, res)=>{
     const {email, password, name}= req.body;
@@ -29,6 +32,14 @@ const userRegistrationController = asyncHandler(async (req, res)=>{
 
     if (!createdUser) throw new ApiError(400, "Unable to register user!");
 
+    const mailreturn = await sendMailer({
+        email, 
+        emailType:"VERIFY",
+        userId:user._id
+    })
+
+    // console.log(mailreturn)
+
     return res.status(200).json(new ApiResponse(200, createdUser, "User Registration Successful"))
 })
 
@@ -45,6 +56,25 @@ const generateUserAccessandRefreshToken = async (user)=>{
     }
 
 }
+
+const userVerification = asyncHandler(async (req, res)=>{
+    const {token} = req.params
+    const user = await User.findOne({
+        verifyToken: token,
+        verifyTokenExpiry: { $gt: Date.now() }
+    });
+
+    if(!user) throw new ApiError(400, "Invalid or Expired Token")
+    
+    user.isVerified = true;
+    user.verifyToken = undefined;
+    user.verifyTokenExpiry = undefined;
+
+    await user.save();
+
+    res.status(200).json(new ApiResponse(200, user, "User Verified"));
+}
+)
 
 const userLoginController = asyncHandler(async (req, res)=>{
     const{email , password} = req.body
@@ -76,5 +106,6 @@ const userLoginController = asyncHandler(async (req, res)=>{
 
 module.exports = {
     userRegistrationController,
-    userLoginController
+    userLoginController,
+    userVerification
 }

@@ -3,11 +3,10 @@ const authRouter = require("./routes/auth.routes.js")
 const cors = require("cors")
 
 const app = express();
-app.use(express.json({
-    limit:"16kb"
-}))
-app.use(express.urlencoded({ extended: true })); // for reading multipart/form-data, can also use multer
 
+// if the content-type does not match the middleware requirement, it is skipped
+app.use(express.json({limit:"16kb"}))            // Only handles when content type is set to "application/json", otherwise skipped
+app.use(express.urlencoded({ extended: true })); // for reading application/x-www-form-urlencoded
 
 const corsOptions = {
     origin: "*",
