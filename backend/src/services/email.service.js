@@ -314,6 +314,40 @@ const sendUserVerificationMail = async ({email, emailType, userId})=>{
     }
 }
 
+const sendTransactionCompletionMail = async ({userEmail, transactionDocument})=>{
+    try{
+        const transporter = nodemailer.createTransport({
+            host: "sandbox.smtp.mailtrap.io",
+            port: "2525",
+            secure: false,
+            auth:{
+                user:process.env.MAILTRAP_MAILER_USERNAME,
+                pass:process.env.MAILTRAP_MAILER_PASSWORD
+            }
+        })
+
+        await transporter.verify();
+        console.log("Nodemailer Transporter Verified");
+
+        const mailOptions = {
+            from:"xtremechai@gmail.com",
+            to:userEmail,
+            subject:"Transaction Completion Mail",
+            text:"",
+            html:`<p>Your transaction is complete. Your Transaction id is ${transactionDocument._id}</p>`,
+        }
+
+        return await transporter.sendMail(mailOptions)
+
+
+    }
+    catch(error){
+        console.log("Error sending mail: ", error);
+        throw new ApiError(400, "Error sending mail");   
+    }
+}
+
 module.exports = {
-    sendUserVerificationMail
+    sendUserVerificationMail,
+    sendTransactionCompletionMail
 }

@@ -1,4 +1,4 @@
-const mongoose = require("moongose")
+const mongoose = require("mongoose")
 const { ApiError } = require("../utils/ApiError.js")
 
 const ledgerSchema = new mongoose.Schema({
@@ -17,13 +17,13 @@ const ledgerSchema = new mongoose.Schema({
     transaction:{
         type: mongoose.Schema.Types.ObjectId,
         ref:"Transaction",
-        required: [true, "Ledger must be assciated with a Transaction"],
+        required: [true, "Ledger must be associated with a Transaction"],
         index: true,
         immutable: true
     },
     type:{
         type: String,
-        enum:["Credit", "Debit"],
+        enum:["CREDIT", "DEBIT"],
         required: true,
         immutable: true
     }
@@ -40,6 +40,9 @@ ledgerSchema.pre('updateOne', preventLedgerModification);
 ledgerSchema.pre('deleteOne', preventLedgerModification);
 ledgerSchema.pre('remove', preventLedgerModification);
 ledgerSchema.pre('deleteMany', preventLedgerModification);
+ledgerSchema.pre('updateMany', preventLedgerModification);
+ledgerSchema.pre('findOneAndDelete', preventLedgerModification);
+ledgerSchema.pre('findOneAndReplace', preventLedgerModification);
 
 const Ledger = mongoose.model("Ledger", ledgerSchema)
 

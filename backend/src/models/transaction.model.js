@@ -19,7 +19,7 @@ const transactionSchema = new mongoose.Schema({
         default: "PENDING"
     },
     amount:{
-        type: String,
+        type: Number,
         required: true,
         min: [0, "Amount cannot be negative"]
     },

@@ -36,6 +36,12 @@ const userSchema = mongoose.Schema({
         type: Boolean,
         default: false
     },
+    systemUser:{
+        type: Boolean,
+        default: false,
+        immutable: true,
+        select: false
+    },
     forgotPasswordToken: String,
     forgotPasswordTokenExpiry: Date,
     verifyToken: String,
